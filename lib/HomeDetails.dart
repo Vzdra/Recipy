@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:info_app/MealResponse.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeDetails extends StatelessWidget{
 
@@ -17,9 +19,21 @@ class HomeDetails extends StatelessWidget{
           mainAxisSize: MainAxisSize.max,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  height: 20,
+                  child: OutlineButton(
+                    onPressed:() => _saveItem(title, description, image),
+                    child: Icon(
+                        Icons.star_rounded,
+                        color: Colors.amber,
+                    ),
+                    borderSide: BorderSide(
+                      color: Colors.green
+                    ),
+                  ),
+                  padding: EdgeInsets.fromLTRB(0, 10, 20, 0),
+                  height: 50,
                 )
               ],
             ),
@@ -94,5 +108,19 @@ class HomeDetails extends StatelessWidget{
       ),
     );
   }
+}
 
+_saveItem(String title, String description, String imageUrl) async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  MealResponse meal = MealResponse.forMapping("0", title, description, imageUrl);
+  String items = prefs.getString("meals");
+  if(items == null){
+    List<MealResponse> meals2 = [];
+    meals2.add(meal);
+    await prefs.setString("meals", MealResponse.encode(meals2));
+  }else{
+    var meals = MealResponse.decode(items);
+    meals.add(meal);
+    await prefs.setString("meals", MealResponse.encode(meals));
+  }
 }

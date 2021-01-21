@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:info_app/FavoritesWidget.dart';
 import 'package:info_app/HomeDetails.dart';
 import 'package:http/http.dart' as http;
 import 'package:info_app/MealResponse.dart';
@@ -50,6 +51,7 @@ class _HomeState extends State<Home>{
               HomeDetails(_itemTitle, _itemDescription, _imageUrl),
           );
           _widgetOptions.add(SearchWidget());
+          _widgetOptions.add(FavoritesWidget());
         });
       });
     }
