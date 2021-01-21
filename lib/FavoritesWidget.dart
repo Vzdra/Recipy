@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:info_app/HomeDetails.dart';
 import 'package:info_app/MealResponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +18,16 @@ class FavoritesWidget extends StatelessWidget{
                     itemBuilder: (context, index){
                       MealResponse mealResponse = snapshot.data[index];
                       return ListTile(
+                        onTap: () => {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                              Scaffold(
+                                appBar: AppBar(
+                                  title: Text("Recipy"),
+                                ),
+                                body: HomeDetails(mealResponse.idMeal, mealResponse.strMeal, mealResponse.strInstructions, mealResponse.strMealThumb),
+                              )
+                          ))
+                        },
                         trailing: CircleAvatar(
                           backgroundImage: NetworkImage(mealResponse.strMealThumb),
                         ),
@@ -33,7 +44,6 @@ class FavoritesWidget extends StatelessWidget{
       ),
     );
   }
-
 }
 
 Future<List<MealResponse>> _getFavorites() async {

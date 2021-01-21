@@ -27,6 +27,7 @@ class _HomeState extends State<Home>{
   String _itemTitle;
   String _itemDescription;
   String _imageUrl;
+  String _itemId;
 
   List<Widget> _widgetOptions = <Widget>[];
 
@@ -42,13 +43,14 @@ class _HomeState extends State<Home>{
         MealResponse res = value.meals[0];
 
         setState(() {
+          _itemId = res.idMeal;
           _itemTitle = res.strMeal;
           _itemDescription = res.strInstructions;
           _imageUrl = res.strMealThumb;
         });
         setState(() {
           _widgetOptions.add(
-              HomeDetails(_itemTitle, _itemDescription, _imageUrl),
+              HomeDetails(_itemId, _itemTitle, _itemDescription, _imageUrl),
           );
           _widgetOptions.add(SearchWidget());
           _widgetOptions.add(FavoritesWidget());

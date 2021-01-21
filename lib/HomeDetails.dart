@@ -5,11 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeDetails extends StatelessWidget{
 
+  final String id;
   final String title;
   final String description;
   final String image;
 
-  HomeDetails(this.title, this.description, this.image);
+  HomeDetails(this.id, this.title, this.description, this.image);
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +121,10 @@ _saveItem(String title, String description, String imageUrl) async{
     await prefs.setString("meals", MealResponse.encode(meals2));
   }else{
     var meals = MealResponse.decode(items);
-    meals.add(meal);
-    await prefs.setString("meals", MealResponse.encode(meals));
+    print('Checking');
+    if(!MealResponse.checkExists(meal, meals)){
+      meals.add(meal);
+      await prefs.setString("meals", MealResponse.encode(meals));
+    }
   }
 }
