@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:info_app/AddRecipe.dart';
 import 'package:info_app/FavoritesWidget.dart';
 import 'package:info_app/HomeDetails.dart';
 import 'package:http/http.dart' as http;
@@ -70,7 +71,24 @@ class _HomeState extends State<Home>{
     if(_widgetOptions!=null && _widgetOptions.length>0){
       return Scaffold(
         appBar: AppBar(
-            title: Text(title)
+            title: Text(title),
+            centerTitle: true,
+          actions: [
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () => {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                      AddRecipe()
+                    ))
+                  },
+                  child: Icon(
+                    Icons.add,
+                    size: 26.0,
+                  )
+                )
+            )
+          ],
         ),
         body: Container(
             child: _widgetOptions.elementAt(_selectedIndex)
