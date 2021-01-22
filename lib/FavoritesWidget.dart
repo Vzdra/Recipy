@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:info_app/HomeDetails.dart';
 import 'package:info_app/MealResponse.dart';
@@ -24,12 +26,25 @@ class FavoritesWidget extends StatelessWidget{
                                 appBar: AppBar(
                                   title: Text("Recipy"),
                                 ),
-                                body: HomeDetails(mealResponse.idMeal, mealResponse.strMeal, mealResponse.strInstructions, mealResponse.strMealThumb),
+                                body: mealResponse.network
+                                    ? HomeDetails(
+                                    mealResponse.idMeal,
+                                    mealResponse.strMeal,
+                                    mealResponse.strInstructions,
+                                    mealResponse.strMealThumb,
+                                    true, true)
+                                    : HomeDetails(mealResponse.idMeal,
+                                    mealResponse.strMeal,
+                                    mealResponse.strInstructions,
+                                    mealResponse.strMealThumb,
+                                    true, false)
                               )
                           ))
                         },
                         trailing: CircleAvatar(
-                          backgroundImage: NetworkImage(mealResponse.strMealThumb),
+                          backgroundImage: mealResponse.network
+                              ? NetworkImage(mealResponse.strMealThumb)
+                              : FileImage(File(mealResponse.strMealThumb))
                         ),
                         title: Text(mealResponse.strMeal),
                       );

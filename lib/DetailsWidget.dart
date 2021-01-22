@@ -22,7 +22,7 @@ class DetailsWidget extends StatelessWidget{
           future: _getById(id),
           builder: (BuildContext context, AsyncSnapshot<MealResponse> snapshot){
             if(snapshot.hasData){
-              return HomeDetails(snapshot.data.idMeal,snapshot.data.strMeal, snapshot.data.strInstructions, snapshot.data.strMealThumb);
+              return HomeDetails(snapshot.data.idMeal,snapshot.data.strMeal, snapshot.data.strInstructions, snapshot.data.strMealThumb, false, true);
             }
             return Center(
               child: Text("Error loading item!"),

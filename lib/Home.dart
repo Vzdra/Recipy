@@ -51,7 +51,7 @@ class _HomeState extends State<Home>{
         });
         setState(() {
           _widgetOptions.add(
-              HomeDetails(_itemId, _itemTitle, _itemDescription, _imageUrl),
+              HomeDetails(_itemId, _itemTitle, _itemDescription, _imageUrl, false, true),
           );
           _widgetOptions.add(SearchWidget());
           _widgetOptions.add(FavoritesWidget());
@@ -106,7 +106,7 @@ class _HomeState extends State<Home>{
               ),
               BottomNavigationBarItem(
                   icon: new Icon(Icons.star),
-                  label: "My Recipes"
+                  label: "Favorites"
               )
             ],
             selectedItemColor: Colors.cyan,

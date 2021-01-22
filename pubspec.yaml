@@ -26,6 +26,7 @@ dependencies:
   http: 0.12.2
   shared_preferences: 0.5.12
   flappy_search_bar: 1.7.2
+  image_picker: 0.6.7+21
 
 
   # The following adds the Cupertino Icons font to your application.
