@@ -75,16 +75,6 @@ class MealResponse{
       meals.map<Map<String, dynamic>>((meal) => MealResponse.toMap(meal)).toList()
   );
 
-  static bool checkExists(MealResponse meal,List<MealResponse> meals) {
-    meals.forEach((element) {
-      if(element.idMeal== meal.idMeal){
-        return true;
-      }
-    });
-
-    return false;
-  }
-
   static List<MealResponse> decode(String meals) => (
     json.decode(meals) as List<dynamic>)
       .map<MealResponse>((item) => MealResponse.fromJson(item)).toList();

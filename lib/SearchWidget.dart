@@ -50,7 +50,6 @@ Future<List<MealResponse>> search(String search) async{
   if(response.statusCode == 200){
     Map vals = jsonDecode(response.body);
     var res = Response.fromJson(vals);
-    print(res.meals);
     return res.meals;
   }
 

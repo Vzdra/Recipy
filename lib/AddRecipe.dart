@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,18 +8,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'MealResponse.dart';
 
 class AddRecipe extends StatefulWidget{
+  var resetItem;
+
+  AddRecipe(this.resetItem);
 
   @override
-  State<StatefulWidget> createState() => _AddRecipeState();
+  State<StatefulWidget> createState() => _AddRecipeState(resetItem);
 }
 
 class _AddRecipeState extends State<AddRecipe> {
+
+  var resetItem;
 
   File _image;
   final nameController = TextEditingController();
   final fieldController = TextEditingController();
   final picker = ImagePicker();
 
+  _AddRecipeState(this.resetItem);
 
   @override
   void dispose(){
@@ -94,7 +101,7 @@ class _AddRecipeState extends State<AddRecipe> {
       final prefs = await SharedPreferences.getInstance();
 
       MealResponse meal = MealResponse.forMapping(
-          "0", name, description, imageUri, false);
+          "asd", name, description, imageUri, false);
       String items = prefs.getString("meals");
       if (items == null) {
         List<MealResponse> meals2 = [];
@@ -102,11 +109,8 @@ class _AddRecipeState extends State<AddRecipe> {
         await prefs.setString("meals", MealResponse.encode(meals2));
       } else {
         var meals = MealResponse.decode(items);
-        print('Checking');
-        if (!MealResponse.checkExists(meal, meals)) {
-          meals.add(meal);
-          await prefs.setString("meals", MealResponse.encode(meals));
-        }
+        meals.add(meal);
+        await prefs.setString("meals", MealResponse.encode(meals));
       }
     }
   }
@@ -127,6 +131,7 @@ class _AddRecipeState extends State<AddRecipe> {
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
                     onTap: () async {
+                      resetItem();
                       await _saveItems(nameController.text, fieldController.text, _image.path);
                       Navigator.pop(context);
                     },

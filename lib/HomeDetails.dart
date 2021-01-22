@@ -33,7 +33,7 @@ class HomeDetails extends StatelessWidget{
                 children: [
                   Container(
                     child: !owned ? OutlineButton(
-                      onPressed:() => _saveItem(title, description, image),
+                      onPressed:() => _saveItem(id, title, description, image),
                       child: Icon(
                         Icons.star_rounded,
                         color: Colors.amber,
@@ -132,9 +132,9 @@ class HomeDetails extends StatelessWidget{
   }
 }
 
-_saveItem(String title, String description, String imageUrl) async{
+_saveItem(String id, String title, String description, String imageUrl) async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  MealResponse meal = MealResponse.forMapping("0", title, description, imageUrl, true);
+  MealResponse meal = MealResponse.forMapping(id, title, description, imageUrl, true);
   String items = prefs.getString("meals");
   if(items == null){
     List<MealResponse> meals2 = [];
@@ -142,10 +142,20 @@ _saveItem(String title, String description, String imageUrl) async{
     await prefs.setString("meals", MealResponse.encode(meals2));
   }else{
     var meals = MealResponse.decode(items);
-    print('Checking');
-    if(!MealResponse.checkExists(meal, meals)){
+    if(!checkExists(meal, meals)){
       meals.add(meal);
       await prefs.setString("meals", MealResponse.encode(meals));
     }
   }
+}
+
+
+bool checkExists(MealResponse meal,List<MealResponse> meals) {
+  for(MealResponse item in meals){
+    if(item.idMeal == meal.idMeal){
+      return true;
+    }
+  }
+
+  return false;
 }

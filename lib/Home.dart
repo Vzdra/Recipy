@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:info_app/MealResponse.dart';
 import 'package:info_app/Response.dart';
 import 'dart:convert';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'SearchWidget.dart';
 
 class Home extends StatefulWidget{
@@ -22,6 +23,9 @@ class Home extends StatefulWidget{
 }
 
 class _HomeState extends State<Home>{
+
+  FlutterLocalNotificationsPlugin localNotificationsPlugin;
+
   int _selectedIndex = 0;
   String title;
 
@@ -39,6 +43,17 @@ class _HomeState extends State<Home>{
   @override
   void initState() {
     super.initState();
+    var androidInitialize = new AndroidInitializationSettings('ic_launcher');
+    var iosInitialize = new IOSInitializationSettings();
+    var initSettings = new InitializationSettings(
+        android: androidInitialize,
+        iOS: iosInitialize
+    );
+
+    localNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    localNotificationsPlugin.initialize(initSettings);
+
+
     if(_itemTitle==null){
       fetchRandom().then((value){
         MealResponse res = value.meals[0];
@@ -56,14 +71,54 @@ class _HomeState extends State<Home>{
           _widgetOptions.add(SearchWidget());
           _widgetOptions.add(FavoritesWidget());
         });
+      }).catchError((onError) {
+        setState(() {
+          _itemId = "";
+          _itemTitle ="No network connection.";
+          _itemDescription = "";
+          _imageUrl = "";
+        });
+        setState(() {
+          _widgetOptions.add(
+            HomeDetails(_itemId, _itemTitle, _itemDescription, _imageUrl, true, true),
+          );
+          _widgetOptions.add(SearchWidget());
+          _widgetOptions.add(FavoritesWidget());
+        });
       });
     }
+
+    _showNotifications();
   }
 
   void _onItemTapped(int index){
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _resetItem(){
+    setState(() {
+      _selectedIndex = 0;
+    });
+  }
+
+  Future _showNotifications() async{
+    var androidDetails = new AndroidNotificationDetails(
+        "repeating channel id",
+        "Local Notification",
+        "Testing purposes.",
+      importance: Importance.max
+    );
+
+    var iOSDetails = new IOSNotificationDetails();
+
+    var generalNotificationDetails = new NotificationDetails(
+      android: androidDetails,
+      iOS: iOSDetails
+    );
+
+    await localNotificationsPlugin.periodicallyShow(0, "Recipy!", "Try something new!", RepeatInterval.everyMinute, generalNotificationDetails);
   }
 
   @override
@@ -79,7 +134,7 @@ class _HomeState extends State<Home>{
                 child: GestureDetector(
                   onTap: () => {
                     Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                      AddRecipe()
+                      AddRecipe(_resetItem)
                     ))
                   },
                   child: Icon(
